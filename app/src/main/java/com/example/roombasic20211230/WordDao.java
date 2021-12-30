@@ -20,7 +20,7 @@ public interface WordDao
     @Query("DELETE FROM WORD")
     void deleteAllWords();
     @Query("SELECT * FROM WORD ORDER BY ID DESC")
-    List<String> getAllWords();
+    List<Word> getAllWords();
 
 
 
