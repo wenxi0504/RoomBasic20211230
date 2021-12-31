@@ -19,8 +19,11 @@ public interface WordDao
     void deleteWords(Word... words);
     @Query("DELETE FROM WORD")
     void deleteAllWords();
+
     @Query("SELECT * FROM WORD ORDER BY ID DESC")
     List<Word> getAllWords();
+
+
 
 
 

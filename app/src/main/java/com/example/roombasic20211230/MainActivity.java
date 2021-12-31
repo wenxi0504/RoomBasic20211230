@@ -32,14 +32,6 @@ public class MainActivity extends AppCompatActivity {
         buttonUpdate=findViewById(R.id.buttonUpdate);
         buttonDelete=findViewById(R.id.buttonDelete);
 
-        /*
-        Word word1= new Word("hello","nihao");
-        Word word2= new Word("world","shijie");
-        Word word3= new Word("sophie","wen");
-        wordDao.insertWords(word1,word2,word3);
-         updateView();
-
-         */
 
         buttonInsert.setOnClickListener(new View.OnClickListener() {
             @Override
