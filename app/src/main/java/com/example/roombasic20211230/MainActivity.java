@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.room.Room;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -59,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
                 Word word3= new Word("sophie1","wen");
                 wordDao.insertWords(word1,word2,word3);
                // updateView();
+                new InsertAsyncTask(wordDao).execute(word1,word2,word3);
 
             }
         });
@@ -68,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 wordDao.deleteAllWords();
                // updateView();
+                new DeleteAllAsyncTask(wordDao).execute();
             }
         });
 
@@ -78,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
                 word.setId(1);
                 wordDao.updateWords(word);
                 //updateView();
+                new UpdateAsyncTask(wordDao).execute(word);
 
 
             }
@@ -90,10 +94,72 @@ public class MainActivity extends AppCompatActivity {
                 word.setId(1);
                 wordDao.deleteWords(word);
                // updateView();
+                new DeleteAsyncTask(wordDao).execute(word);
             }
         });
 
 
+    }
+
+    // void 1 is to report progress, void 2 is to report result
+    static class InsertAsyncTask extends AsyncTask<Word,Void,Void>{
+        private WordDao wordDao;
+
+        public InsertAsyncTask(WordDao wordDao) {
+            this.wordDao = wordDao;
+        }
+
+        @Override
+        protected Void doInBackground(Word... words) {
+            wordDao.insertWords(words);
+            return null;
+        }
+        // postExcute,progressUpdate//preExecute
+    }
+
+    static class UpdateAsyncTask extends AsyncTask<Word,Void,Void>{
+        private WordDao wordDao;
+
+        public UpdateAsyncTask(WordDao wordDao) {
+            this.wordDao = wordDao;
+        }
+
+        @Override
+        protected Void doInBackground(Word... words) {
+            wordDao.updateWords(words);
+            return null;
+        }
+        // postExcute,progressUpdate//preExecute
+    }
+
+    static class DeleteAsyncTask extends AsyncTask<Word,Void,Void>{
+        private WordDao wordDao;
+
+        public DeleteAsyncTask(WordDao wordDao) {
+            this.wordDao = wordDao;
+        }
+
+        @Override
+        protected Void doInBackground(Word... words) {
+            wordDao.deleteWords(words);
+            return null;
+        }
+        // postExcute,progressUpdate//preExecute
+    }
+
+    static class DeleteAllAsyncTask extends AsyncTask<Void,Void,Void>{
+        private WordDao wordDao;
+
+        public DeleteAllAsyncTask(WordDao wordDao) {
+            this.wordDao = wordDao;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            wordDao.deleteAllWords();
+            return null;
+        }
+        // postExcute,progressUpdate//preExecute
     }
 
 /*

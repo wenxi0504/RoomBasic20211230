@@ -10,12 +10,12 @@ import androidx.room.RoomDatabase;
 @Database(entities ={Word.class},version=1,exportSchema = false )
 public abstract class WordDatabase extends RoomDatabase {
     private  static WordDatabase INSTANCE;
-    //singleton 
+    //singleton
     static synchronized WordDatabase getDatabase(Context context){
         if(INSTANCE == null)
         {
             INSTANCE= Room.databaseBuilder(context.getApplicationContext(),WordDatabase.class,"word_database")
-                    .allowMainThreadQueries().build();
+                    .build();
         }
         return INSTANCE;
     }
