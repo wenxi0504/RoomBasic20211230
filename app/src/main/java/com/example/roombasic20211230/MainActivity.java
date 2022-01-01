@@ -1,6 +1,8 @@
 package com.example.roombasic20211230;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.room.Room;
 
 import android.os.Bundle;
@@ -15,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
     WordDao wordDao;
     TextView textView;
     Button buttonInsert,buttonUpdate,buttonDelete,buttonClear;
-
+   LiveData<List<Word>>allWordsLive;
 
 
     @Override
@@ -26,7 +28,23 @@ public class MainActivity extends AppCompatActivity {
                 .allowMainThreadQueries()// temporary use , normally crud should use at other treads
                 .build();
         wordDao=wordDatabase.getWordDao();
+        allWordsLive=wordDao.getAllWordsLive();
         textView=findViewById(R.id.textView);
+        // no need updateView() bc livedata is observed
+       // updateView();
+        allWordsLive.observe(this, new Observer<List<Word>>() {
+            @Override
+            public void onChanged(List<Word> words) {
+                String text="";
+                for (int i=0;i<words.size();i++)
+                {
+                    Word word=words.get(i);
+                    text+= new StringBuilder().append(word.getId()).append(":").append(word.getWord()).append("=").append(word.getChineseMeaning()).append("\n").toString();
+                    textView.setText(text);
+                }
+            }
+        });
+
         buttonInsert=findViewById(R.id.buttonInsert);
         buttonClear=findViewById(R.id.buttonClear);
         buttonUpdate=findViewById(R.id.buttonUpdate);
@@ -40,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
                 Word word2= new Word("world1","shijie");
                 Word word3= new Word("sophie1","wen");
                 wordDao.insertWords(word1,word2,word3);
-                updateView();
+               // updateView();
 
             }
         });
@@ -49,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 wordDao.deleteAllWords();
-                updateView();
+               // updateView();
             }
         });
 
@@ -59,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
                 Word word = new Word("hi,", "nihaoa");
                 word.setId(1);
                 wordDao.updateWords(word);
-                updateView();
+                //updateView();
 
 
             }
@@ -71,14 +89,14 @@ public class MainActivity extends AppCompatActivity {
                 Word word = new Word("hi,", "nihaoa");
                 word.setId(1);
                 wordDao.deleteWords(word);
-                updateView();
+               // updateView();
             }
         });
 
 
     }
 
-
+/*
     void updateView(){
         List<Word> list=wordDao.getAllWords();
         String text="";
@@ -89,4 +107,6 @@ public class MainActivity extends AppCompatActivity {
             textView.setText(text);
         }
     }
+
+ */
 }
