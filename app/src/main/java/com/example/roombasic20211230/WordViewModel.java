@@ -11,93 +11,31 @@ import java.util.List;
 
 public class WordViewModel extends AndroidViewModel {
     private WordDao wordDao;
-    private LiveData<List<Word>>allWordsLive;
+    private WordRepository wordRepository;
     public WordViewModel(@NonNull Application application) {
         super(application);
-        WordDatabase wordDatabase=WordDatabase.getDatabase(application);
-        wordDao = wordDatabase.getWordDao();
-        //live is sync
-        allWordsLive=wordDao.getAllWordsLive();
+        wordRepository = new WordRepository(application);
+
     }
 
     public LiveData<List<Word>> getAllWordsLive() {
-        return allWordsLive;
+        return wordRepository.getAllWordsLive();
     }
 
     void insertWords(Word...words){
-        new InsertAsyncTask(wordDao).execute(words);
+        wordRepository.insertWords(words);
     }
     void updateWords(Word...words){
-        new UpdateAsyncTask(wordDao).execute(words);
+        wordRepository.updateWords(words);
     }
 
     void deleteWords(Word...words){
-        new DeleteAsyncTask(wordDao).execute(words);
+        wordRepository.deleteWords(words);
     }
 
-    void deleteAllWords (Word...words){
-        new DeleteAllAsyncTask(wordDao).execute();
+    void deleteAllWords (){
+        wordRepository.deleteAllWords();
     }
 
-    // void 1 is to report progress, void 2 is to report result
-    static class InsertAsyncTask extends AsyncTask<Word,Void,Void> {
-        private WordDao wordDao;
-
-        public InsertAsyncTask(WordDao wordDao) {
-            this.wordDao = wordDao;
-        }
-
-        @Override
-        protected Void doInBackground(Word... words) {
-            wordDao.insertWords(words);
-            return null;
-        }
-        // postExcute,progressUpdate//preExecute
-    }
-
-    static class UpdateAsyncTask extends AsyncTask<Word,Void,Void>{
-        private WordDao wordDao;
-
-        public UpdateAsyncTask(WordDao wordDao) {
-            this.wordDao = wordDao;
-        }
-
-        @Override
-        protected Void doInBackground(Word... words) {
-            wordDao.updateWords(words);
-            return null;
-        }
-        // postExcute,progressUpdate//preExecute
-    }
-
-    static class DeleteAsyncTask extends AsyncTask<Word,Void,Void>{
-        private WordDao wordDao;
-
-        public DeleteAsyncTask(WordDao wordDao) {
-            this.wordDao = wordDao;
-        }
-
-        @Override
-        protected Void doInBackground(Word... words) {
-            wordDao.deleteWords(words);
-            return null;
-        }
-        // postExcute,progressUpdate//preExecute
-    }
-
-    static class DeleteAllAsyncTask extends AsyncTask<Void,Void,Void>{
-        private WordDao wordDao;
-
-        public DeleteAllAsyncTask(WordDao wordDao) {
-            this.wordDao = wordDao;
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            wordDao.deleteAllWords();
-            return null;
-        }
-        // postExcute,progressUpdate//preExecute
-    }
 
 }

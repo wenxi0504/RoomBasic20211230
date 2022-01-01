@@ -16,54 +16,58 @@ import android.widget.TextView;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-   // WordDatabase wordDatabase;
-   // WordDao wordDao;
+    // WordDatabase wordDatabase;
+    // WordDao wordDao;
     TextView textView;
-    Button buttonInsert,buttonUpdate,buttonDelete,buttonClear;
-  // LiveData<List<Word>>allWordsLive;
-   WordViewModel wordViewModel;
+    Button buttonInsert, buttonUpdate, buttonDelete, buttonClear;
+    // LiveData<List<Word>>allWordsLive;
+    WordViewModel wordViewModel;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        wordViewModel= new ViewModelProvider(this).get(WordViewModel.class);
+        wordViewModel = new ViewModelProvider(this).get(WordViewModel.class);
 
-       // wordDatabase= Room.databaseBuilder(this,WordDatabase.class,"word_database").build();
-       //wordDao=wordDatabase.getWordDao();
+        // wordDatabase= Room.databaseBuilder(this,WordDatabase.class,"word_database").build();
+        //wordDao=wordDatabase.getWordDao();
 
-       // allWordsLive=wordDao.getAllWordsLive();
-        textView=findViewById(R.id.textView);
+        // allWordsLive=wordDao.getAllWordsLive();
+        textView = findViewById(R.id.textView);
         // no need updateView() bc livedata is observed
-       // updateView();
+        // updateView();
         wordViewModel.getAllWordsLive().observe(this, new Observer<List<Word>>() {
             @Override
             public void onChanged(List<Word> words) {
-                String text="";
-                for (int i=0;i<words.size();i++)
+                String text = " ";
+                if (words.size()==0)
                 {
-                    Word word=words.get(i);
-                    text+= new StringBuilder().append(word.getId()).append(":").append(word.getWord()).append("=").append(word.getChineseMeaning()).append("\n").toString();
+                    textView.setText("");
+                }
+
+                for (int i = 0; i < words.size(); i++) {
+                    Word word = words.get(i);
+                    text += new StringBuilder().append(word.getId()).append(":").append(word.getWord()).append("=").append(word.getChineseMeaning()).append("\n").toString();
                     textView.setText(text);
                 }
             }
         });
 
-        buttonInsert=findViewById(R.id.buttonInsert);
-        buttonClear=findViewById(R.id.buttonClear);
-        buttonUpdate=findViewById(R.id.buttonUpdate);
-        buttonDelete=findViewById(R.id.buttonDelete);
+        buttonInsert = findViewById(R.id.buttonInsert);
+        buttonClear = findViewById(R.id.buttonClear);
+        buttonUpdate = findViewById(R.id.buttonUpdate);
+        buttonDelete = findViewById(R.id.buttonDelete);
 
 
         buttonInsert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Word word1= new Word("hello1","nihao");
-                Word word2= new Word("world1","shijie");
-                Word word3= new Word("sophie1","wen");
-                wordViewModel.insertWords(word1,word2,word3);
-               // updateView();
+                Word word1 = new Word("hello1", "nihao");
+                Word word2 = new Word("world1", "shijie");
+                Word word3 = new Word("sophie1", "wen");
+                wordViewModel.insertWords(word1, word2, word3);
+                // updateView();
                 //new WordViewModel.InsertAsyncTask(wordDao).execute(word1,word2,word3);
 
             }
@@ -73,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 wordViewModel.deleteAllWords();
-               // updateView();
+                // updateView();
                 //new WordViewModel.DeleteAllAsyncTask(wordDao).execute();
             }
         });
@@ -82,10 +86,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Word word = new Word("hi,", "nihaoa");
-                word.setId(1);
+                word.setId(54);
                 wordViewModel.updateWords(word);
                 //updateView();
-               // new WordViewModel.UpdateAsyncTask(wordDao).execute(word);
+                // new WordViewModel.UpdateAsyncTask(wordDao).execute(word);
 
 
             }
@@ -95,9 +99,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Word word = new Word("hi,", "nihaoa");
-                word.setId(1);
+                word.setId(52);
                 wordViewModel.deleteWords(word);
-               // updateView();
+                // updateView();
                 //new WordViewModel.DeleteAsyncTask(wordDao).execute(word);
             }
         });

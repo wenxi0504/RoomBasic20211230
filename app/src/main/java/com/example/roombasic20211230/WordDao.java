@@ -18,6 +18,7 @@ public interface WordDao
     void updateWords(Word... words);
     @Delete
     void deleteWords(Word... words);
+
     @Query("DELETE FROM WORD")
     void deleteAllWords();
 
